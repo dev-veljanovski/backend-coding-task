@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.TimeProvider.Testing" />
+    <PackageReference Include="NSubstitute" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Claims.Application\Claims.Application.csproj" />
+    <ProjectReference Include="..\..\src\Claims.Infrastructure\Claims.Infrastructure.csproj" />
+  </ItemGroup>
+
+</Project>
