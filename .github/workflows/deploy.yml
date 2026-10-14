@@ -51,5 +51,6 @@ jobs:
             "-source:contentPath=$source" `
             "-dest:contentPath=$site,computerName=$endpoint,userName=$($env:DEPLOY_USER.Trim()),password=$env:DEPLOY_PASSWORD,authType=Basic" `
             -enableRule:AppOffline `
+            -enableRule:DoNotDeleteRule `
             -allowUntrusted
           if ($LASTEXITCODE -ne 0) { throw "Web Deploy failed with exit code $LASTEXITCODE" }
