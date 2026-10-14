@@ -10,8 +10,8 @@ Backend for the insurance claims handling task. Built with .NET 10.
 
 The API runs on MonsterASP.NET (free plan), with MongoDB Atlas and SQL Server:
 
-- Swagger UI: http://DEMO_HOST/swagger
-- Scalar: http://DEMO_HOST/scalar
+- Swagger UI: http://claims.runasp.net/swagger
+- Scalar: http://claims.runasp.net/scalar
 
 It's a free shared host, so the first request after a quiet period can be slow.
 Requests are limited to 60 per minute per IP.
