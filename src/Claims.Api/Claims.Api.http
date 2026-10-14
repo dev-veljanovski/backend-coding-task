@@ -1,0 +1,71 @@
+@baseUrl = http://localhost:5052/api/v1
+
+### 1. Create a cover (starts tomorrow, 6 months)
+# @name createCover
+POST {{baseUrl}}/covers
+Content-Type: application/json
+
+{
+  "startDate": "{{$datetime "yyyy-MM-dd" 1 d}}",
+  "endDate": "{{$datetime "yyyy-MM-dd" 181 d}}",
+  "type": "Yacht"
+}
+
+### 2. Get the cover
+GET {{baseUrl}}/covers/{{createCover.response.body.$.id}}
+
+### 3. List covers
+GET {{baseUrl}}/covers?page=1&pageSize=10
+
+### 4. Quote a premium without creating a cover
+GET {{baseUrl}}/covers/premium?startDate={{$datetime "yyyy-MM-dd" 1 d}}&endDate={{$datetime "yyyy-MM-dd" 366 d}}&coverType=Tanker
+
+### 5. Create a claim under the cover
+# @name createClaim
+POST {{baseUrl}}/claims
+Content-Type: application/json
+
+{
+  "coverId": "{{createCover.response.body.$.id}}",
+  "name": "Hull damage in port",
+  "type": "Collision",
+  "damageCost": 25000,
+  "created": "{{$datetime "yyyy-MM-dd" 10 d}}"
+}
+
+### 6. Get the claim
+GET {{baseUrl}}/claims/{{createClaim.response.body.$.id}}
+
+### 7. List claims
+GET {{baseUrl}}/claims?page=1&pageSize=10
+
+### 8. Delete the claim (204), then step 6 returns 404
+DELETE {{baseUrl}}/claims/{{createClaim.response.body.$.id}}
+
+### 9. Delete the cover
+DELETE {{baseUrl}}/covers/{{createCover.response.body.$.id}}
+
+### Validation: damage cost above 100.000 and created date outside the cover -> 400
+POST {{baseUrl}}/claims
+Content-Type: application/json
+
+{
+  "coverId": "{{createCover.response.body.$.id}}",
+  "name": "Total loss",
+  "type": "Fire",
+  "damageCost": 150000,
+  "created": "{{$datetime "yyyy-MM-dd" 400 d}}"
+}
+
+### Validation: start date in the past and period longer than one year -> 400
+POST {{baseUrl}}/covers
+Content-Type: application/json
+
+{
+  "startDate": "{{$datetime "yyyy-MM-dd" -1 d}}",
+  "endDate": "{{$datetime "yyyy-MM-dd" 400 d}}",
+  "type": "Tanker"
+}
+
+### Health
+GET http://localhost:5052/health/ready
