@@ -49,5 +49,6 @@ public sealed class ClaimsApiFactory : WebApplicationFactory<Program>, IAsyncLif
             new SqlConnectionStringBuilder(_sql.GetConnectionString()) { InitialCatalog = "ClaimsAuditTests" }.ConnectionString);
         builder.UseSetting("MongoDb:DatabaseName", "ClaimsTests");
         builder.UseSetting("Outbox:PollingInterval", "00:00:00.200");
+        builder.UseSetting("RateLimiting:PermitLimit", "100000");
     }
 }

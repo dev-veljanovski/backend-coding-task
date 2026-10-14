@@ -10,15 +10,18 @@ await builder.AddLocalContainersAsync();
 builder.Services
     .AddApplication()
     .AddInfrastructure(builder.Configuration)
-    .AddPresentation();
+    .AddPresentation()
+    .AddRequestLimits(builder.Configuration);
 
 builder.AddObservability();
 
 var app = builder.Build();
 
+app.UseForwardedHeaders();
 app.UseExceptionHandler();
 app.UseStatusCodePages();
 app.UseHttpsRedirection();
+app.UseRateLimiter();
 
 app.MapApiDocumentation();
 app.MapControllers();
