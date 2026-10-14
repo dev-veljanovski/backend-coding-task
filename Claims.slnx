@@ -18,13 +18,13 @@
     <File Path="global.json" />
     <File Path="README.md" />
     <File Path="docker-compose.yml" />
-    <File Path="render.yaml" />
   </Folder>
   <Folder Name="/docs/">
     <File Path="docs/README.md" />
   </Folder>
   <Folder Name="/.github/workflows/">
     <File Path=".github/workflows/ci.yml" />
+    <File Path=".github/workflows/deploy.yml" />
     <File Path=".github/workflows/image.yml" />
     <File Path=".github/workflows/keep-alive.yml" />
   </Folder>

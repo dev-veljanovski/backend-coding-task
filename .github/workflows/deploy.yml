@@ -1,0 +1,43 @@
+name: Deploy to MonsterASP
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: windows-latest
+    timeout-minutes: 20
+    env:
+      WEBSITE_NAME: ${{ secrets.WEBSITE_NAME }}
+
+    steps:
+      - uses: actions/checkout@v4
+        if: ${{ env.WEBSITE_NAME != '' }}
+
+      - uses: actions/setup-dotnet@v4
+        if: ${{ env.WEBSITE_NAME != '' }}
+        with:
+          global-json-file: global.json
+
+      - name: Publish
+        if: ${{ env.WEBSITE_NAME != '' }}
+        run: dotnet publish src/Claims.Api/Claims.Api.csproj --configuration Release --runtime win-x86 --self-contained false --output ./publish
+
+      - name: Deploy via Web Deploy
+        if: ${{ env.WEBSITE_NAME != '' }}
+        uses: rasmusbuchholdt/simply-web-deploy@2.1.0
+        with:
+          website-name: ${{ secrets.WEBSITE_NAME }}
+          server-computer-name: ${{ secrets.SERVER_COMPUTER_NAME }}
+          server-username: ${{ secrets.SERVER_USERNAME }}
+          server-password: ${{ secrets.SERVER_PASSWORD }}
+          source-path: '\publish\'

@@ -17,8 +17,6 @@ jobs:
   publish:
     runs-on: ubuntu-latest
     timeout-minutes: 20
-    env:
-      RENDER_DEPLOY_HOOK: ${{ secrets.RENDER_DEPLOY_HOOK }}
 
     steps:
       - uses: actions/checkout@v4
@@ -44,6 +42,3 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
-      - name: Redeploy on Render
-        if: ${{ env.RENDER_DEPLOY_HOOK != '' }}
-        run: curl --silent --show-error --fail --max-time 30 --output /dev/null "$RENDER_DEPLOY_HOOK"
