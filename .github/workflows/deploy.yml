@@ -34,10 +34,22 @@ jobs:
 
       - name: Deploy via Web Deploy
         if: ${{ env.WEBSITE_NAME != '' }}
-        uses: rasmusbuchholdt/simply-web-deploy@2.1.0
-        with:
-          website-name: ${{ secrets.WEBSITE_NAME }}
-          server-computer-name: ${{ secrets.SERVER_COMPUTER_NAME }}
-          server-username: ${{ secrets.SERVER_USERNAME }}
-          server-password: ${{ secrets.SERVER_PASSWORD }}
-          source-path: '\publish\'
+        shell: pwsh
+        env:
+          DEPLOY_USER: ${{ secrets.SERVER_USERNAME }}
+          DEPLOY_PASSWORD: ${{ secrets.SERVER_PASSWORD }}
+        run: |
+          $site = $env:WEBSITE_NAME.Trim()
+          $endpoint = "https://$site.siteasp.net:8172/msdeploy.axd?site=$site"
+          $msdeploy = @(
+            "C:\Program Files\IIS\Microsoft Web Deploy V3\msdeploy.exe",
+            "C:\Program Files (x86)\IIS\Microsoft Web Deploy V3\msdeploy.exe"
+          ) | Where-Object { Test-Path $_ } | Select-Object -First 1
+          if (-not $msdeploy) { throw "msdeploy.exe was not found on the runner" }
+          $source = (Resolve-Path ./publish).Path
+          & $msdeploy -verb:sync `
+            "-source:contentPath=$source" `
+            "-dest:contentPath=$site,computerName=$endpoint,userName=$($env:DEPLOY_USER.Trim()),password=$env:DEPLOY_PASSWORD,authType=Basic" `
+            -enableRule:AppOffline `
+            -allowUntrusted
+          if ($LASTEXITCODE -ne 0) { throw "Web Deploy failed with exit code $LASTEXITCODE" }
