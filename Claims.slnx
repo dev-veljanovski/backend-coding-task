@@ -25,6 +25,7 @@
   </Folder>
   <Folder Name="/.github/workflows/">
     <File Path=".github/workflows/ci.yml" />
+    <File Path=".github/workflows/image.yml" />
     <File Path=".github/workflows/keep-alive.yml" />
   </Folder>
 </Solution>

@@ -1,12 +1,12 @@
 services:
   - type: web
     name: claims-api
-    runtime: docker
+    runtime: image
+    image:
+      url: ghcr.io/dev-veljanovski/backend-coding-task:latest
     plan: free
     region: frankfurt
-    dockerfilePath: ./Dockerfile
     healthCheckPath: /health/live
-    autoDeploy: true
     envVars:
       - key: PORT
         value: "8080"

@@ -10,8 +10,8 @@ Backend for the insurance claims handling task. Built with .NET 10.
 
 The API is deployed on Render (free plan), with MongoDB Atlas and a hosted SQL Server:
 
-- Swagger UI: https://claims-api.onrender.com/swagger
-- Scalar: https://claims-api.onrender.com/scalar
+- Swagger UI: https://claims-api-lqsh.onrender.com/swagger
+- Scalar: https://claims-api-lqsh.onrender.com/scalar
 
 The free plan puts the service to sleep when nobody uses it, so the first request can take up to a minute. After that it's fast.
 Requests are limited to 60 per minute per IP.
